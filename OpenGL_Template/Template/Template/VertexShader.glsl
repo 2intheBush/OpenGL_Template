@@ -12,7 +12,7 @@ out vec2 UV;
 void main()
 {
 	vertColour = colour;
-        UV = vertexUV;
+        UV = VertexUV;
 
         vec4 scaledPosition = MVP * position;
 
