@@ -19,4 +19,20 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="VertexShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="FlatFragmentShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TexturedFragmentShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\MathLib_Static.lib">
+      <Filter>Header Files</Filter>
+    </Library>
+  </ItemGroup>
 </Project>
