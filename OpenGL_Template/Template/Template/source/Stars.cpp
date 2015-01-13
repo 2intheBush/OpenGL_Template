@@ -1,29 +1,29 @@
-#include "Player.h"
+#include "Stars.h"
+#include <time.h>
+#include <stdlib.h>
 
-Vertex* MyShape = new Vertex[3];
+Vertex* MyStarShape = new Vertex[50];
 
-Player::Player()
+Stars::Stars()
 {
 	Initialize();
 }
 
-void Player::Initialize()
+void Stars::Initialize()
 {
-	//setting up vertices
-	MyShape[0].positions[0] = 1024 / 2.0;
-	MyShape[0].positions[1] = 720 / 2.0 + 10.0f;
-	MyShape[1].positions[0] = 1024 / 2.0 - 5.0f;
-	MyShape[1].positions[1] = 720 / 2.0 - 10.0f;
-	MyShape[2].positions[0] = 1024 / 2.0f + 5.0f;
-	MyShape[2].positions[1] = 720 / 2.0f - 10.0f;
-	for (int i = 0; i < 3; i++)
+
+	// setting up star vertices
+	for (int i = 0; i < 50; i++)
 	{
-		MyShape[i].positions[2] = 0.0f;
-		MyShape[i].positions[3] = 1.0f;
-		MyShape[i].colors[0] = 0.0f;
-		MyShape[i].colors[1] = 0.0f;
-		MyShape[i].colors[2] = 1.0f;
-		MyShape[i].colors[3] = 1.0f;
+		
+		MyStarShape[i].positions[0] = rand() % 1024;
+		MyStarShape[i].positions[1] = rand() % 720;
+		MyStarShape[i].positions[2] = 0.0f;
+		MyStarShape[i].positions[3] = 1.0f;
+		MyStarShape[i].colors[0] = 1.0f;
+		MyStarShape[i].colors[1] = 1.0f;
+		MyStarShape[i].colors[2] = 1.0f;
+		MyStarShape[i].colors[3] = 1.0f;
 	};
 
 	glGenBuffers(1, &uiVBO);
@@ -32,7 +32,7 @@ void Player::Initialize()
 
 
 
-void Player::UpdateVBO_IBO()
+void Stars::UpdateVBO_IBO()
 {
 	//check if vertex buffer succeeded
 	if (uiVBO != 0)
@@ -41,13 +41,13 @@ void Player::UpdateVBO_IBO()
 		glBindBuffer(GL_ARRAY_BUFFER, uiVBO);
 
 		//allocate space on graphics card
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)* 3, NULL, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)* 50, NULL, GL_STATIC_DRAW);
 
 		//get pointer to allocate space on graphics card
 		GLvoid* vSBuffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 
 		//copy to graphics card
-		memcpy(vSBuffer, MyShape, sizeof(Vertex)* 3);
+		memcpy(vSBuffer, MyStarShape, sizeof(Vertex)* 50);
 
 		//unmap and unbind
 		glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -60,12 +60,12 @@ void Player::UpdateVBO_IBO()
 		//bind IBO
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uiIBO);
 		//allocate space for index info on the graphics card
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(char), NULL, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 50 * sizeof(char), NULL, GL_STATIC_DRAW);
 		//get pointer to newly allocated space on the graphics card
 		GLvoid* iBuffer = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
 		//specify the order we'd like to draw our vertices.
 		//In this case they are in sequential order
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			((char*)iBuffer)[i] = i;
 		}
@@ -75,7 +75,7 @@ void Player::UpdateVBO_IBO()
 	}
 }
 
-void Player::UpdateDraw()
+void Stars::UpdateDraw()
 {
 	//bind both buffers
 	glBindBuffer(GL_ARRAY_BUFFER, uiVBO);
@@ -86,9 +86,17 @@ void Player::UpdateDraw()
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(float)* 4));
 
 	//draw to the screen
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, NULL);
+	glDrawElements(GL_POINTS, 50, GL_UNSIGNED_BYTE, NULL);
 
 	//unbind buffers 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Stars::DestroyStars()
+{
+	for (int i = 0; i < 50; i++)
+	{
+		delete &MyStarShape[i];
+	}
 }

@@ -77,11 +77,16 @@
     <Library Include="libs\MathLib_Static.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Astroids.h" />
+    <ClInclude Include="include\BaseClass.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Stars.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Astroids.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
+    <ClCompile Include="source\Stars.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

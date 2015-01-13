@@ -6,22 +6,15 @@
 #include <string>
 #include <fstream>
 #include <time.h>
+#include "Player.h"
+#include "Stars.h"
+#include "Astroids.h"
 
 GLuint CreateShader(GLenum a_ShaderType, const char* a_strShaderFile);
 
 GLuint CreateProgram(const char* a_vertex, const char* a_frag);
 
 float* getOrtho(float left, float right, float bottom, float top, float a_fNear, float a_fFar);
-
-struct Vertex
-{
-	float positions[4];
-	float colors[4];
-};
-Vertex* myShape = new Vertex[3];
-Vertex* StarShapes = new Vertex[25];
-
-
 
 int main()
 {
@@ -73,81 +66,9 @@ int main()
 	//set up the mapping of the screen to pixel co-ordinates. 
 	float* orthographicProjection = getOrtho(0, 1024, 0, 720, 0, 100);
 
-	//setting up vertices
-	myShape[0].positions[0] = 1024 / 2.0;
-	myShape[0].positions[1] = 720 / 2.0 + 10.0f;
-	myShape[1].positions[0] = 1024 / 2.0 - 5.0f;
-	myShape[1].positions[1] = 720 / 2.0 - 10.0f;
-	myShape[2].positions[0] = 1024 / 2.0f + 5.0f;
-	myShape[2].positions[1] = 720 / 2.0f - 10.0f;
-	for (int i = 0; i < 3; i++)
-	{
-		myShape[i].positions[2] = 0.0f;
-		myShape[i].positions[3] = 1.0f;
-		myShape[i].colors[0] = 0.0f;
-		myShape[i].colors[1] = 0.0f;
-		myShape[i].colors[2] = 1.0f;
-		myShape[i].colors[3] = 1.0f;
-	};
-
-	// setting up star vertices
-	for (int i = 0; i < 25; i++)
-	{
-		StarShapes[i].positions[0] = rand() % 1024;
-		StarShapes[i].positions[1] = rand() % 720;
-		StarShapes[i].positions[2] = 0.0f;
-		StarShapes[i].positions[3] = 1.0f;
-		StarShapes[i].colors[0] = 0.0f;
-		StarShapes[i].colors[1] = 0.0f;
-		StarShapes[i].colors[2] = 1.0f;
-		StarShapes[i].colors[3] = 1.0f;
-	};
-	
-	//create ID for a VBO
-	GLuint uiVBO;
-	glGenBuffers(1, &uiVBO);
-	GLuint uiVBOS;
-	glGenBuffers(1, &uiVBOS);
-
-	//check if stars succeeded
-	if (uiVBOS != 0)
-	{
-		//bind VBO
-		glBindBuffer(GL_ARRAY_BUFFER, uiVBOS);
-
-		//allocate space on graphics card
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)* 25, NULL, GL_STATIC_DRAW);
-
-		//get pointer to allocate space on graphics card
-		GLvoid* vSBuffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-
-		//copy to graphics card
-		memcpy(vSBuffer, StarShapes, sizeof(Vertex)* 25);
-
-		//unmap and unbind
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	//check it succeeded
-	if (uiVBO != 0)
-	{
-		//bind VBO
-		glBindBuffer(GL_ARRAY_BUFFER, uiVBO);
-
-		//allocate space on graphics card
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)* 3, NULL, GL_STATIC_DRAW);
-
-		//get pointer to allocate space on graphics card
-		GLvoid* vBuffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-
-		//copy to graphics card
-		memcpy(vBuffer, myShape, sizeof(Vertex)* 3);
-
-		//unmap and unbind
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
+	Player playerInstance;
+	Stars background;
+	Astroids Astroids;
 
 	//loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -159,8 +80,6 @@ int main()
 		//enable Shaders
 		glUseProgram(uiProgramFlat);
 
-		glBindBuffer(GL_ARRAY_BUFFER, uiVBOS);
-
 		//send our orthographic projection info to the shader
 		glUniformMatrix4fv(MatrixIDFlat, 1, GL_FALSE, orthographicProjection);
 
@@ -170,21 +89,17 @@ int main()
 
 		//specify where our vertex array is
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(float)*4));
-
-		//glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-		//glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float)* 4));
-
-		//draw to screen
-		glDrawArrays(GL_POINTS, 0, 25);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, uiVBO);
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(float)* 4));
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		playerInstance.UpdateVBO_IBO();
+		playerInstance.UpdateDraw();
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		background.UpdateVBO_IBO();
+		background.UpdateDraw();
+
+		Astroids.UpdateVBO_IBO();
+		Astroids.UpdateDraw();
+
 
 		//swap front and back buffers
 		glfwSwapBuffers(window);

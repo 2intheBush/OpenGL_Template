@@ -1,20 +1,19 @@
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#ifndef _STARS_H_
+#define _STARS_H_
 
 #include "BaseClass.h"
 
-class Player
+class Stars
 {
 public:
-	Player();
-	~Player(){};
+	Stars();
+	~Stars(){};
 	
-
 	void Initialize();
 	void UpdateVBO_IBO();
 	void UpdateDraw();
-	void DestroyPlayer();
-	
+	void DestroyStars();
+
 	GLuint uiVBO;
 	GLuint uiIBO;
 

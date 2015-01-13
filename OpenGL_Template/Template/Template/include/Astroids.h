@@ -1,24 +1,22 @@
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#ifndef _ASTROIDS_H_
+#define _ASTROIDS_H_
 
 #include "BaseClass.h"
 
-class Player
+class Astroids
 {
 public:
-	Player();
-	~Player(){};
-	
+	Astroids();
+	~Astroids(){};
+
 
 	void Initialize();
 	void UpdateVBO_IBO();
 	void UpdateDraw();
 	void DestroyPlayer();
-	
+
 	GLuint uiVBO;
 	GLuint uiIBO;
-
-
 };
 
 #endif
