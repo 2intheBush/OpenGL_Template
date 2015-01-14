@@ -23,7 +23,7 @@ void Player::Initialize()
 		MyShape[i].colors[0] = 0.0f;
 		MyShape[i].colors[1] = 0.0f;
 		MyShape[i].colors[2] = 1.0f;
-		MyShape[i].colors[3] = 1.0f;
+		MyShape[i].colors[3] = 1.0f; 
 	};
 
 	glGenBuffers(1, &uiVBO);
@@ -80,6 +80,9 @@ void Player::UpdateDraw()
 	//bind both buffers
 	glBindBuffer(GL_ARRAY_BUFFER, uiVBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uiIBO);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 
 	//specify where our vertex array is
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);

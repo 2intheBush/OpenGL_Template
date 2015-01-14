@@ -1,10 +1,7 @@
-#include "GL\glew.h"
-#include "GL\wglew.h"
-//glew has to go first.
-#include "GLFW\glfw3.h"
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 #include <time.h>
 #include "Player.h"
 #include "Stars.h"
@@ -15,6 +12,8 @@ GLuint CreateShader(GLenum a_ShaderType, const char* a_strShaderFile);
 GLuint CreateProgram(const char* a_vertex, const char* a_frag);
 
 float* getOrtho(float left, float right, float bottom, float top, float a_fNear, float a_fFar);
+
+
 
 int main()
 {
@@ -43,25 +42,13 @@ int main()
 		return -1;
 	}
 
-	//Vertex values
-	/*	const float vertexPositions[] =
-	{
-		1024 / 2.0, 720 / 2.0 + 10.0f, 0.0f, 1.0f,
-		1024 / 2.0 - 5.0f, 1024 / 2.0 - 5.0f, 0.0f, 1.0f,
-		1024 / 2.0f + 5.0f, 720 / 2.0f - 10.0f, 0.0f, 1.0f,
-	};
-
-	const float vertexColors[] =
-	{
-		1.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 1.0f, 0.0f, 0.5f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-	};*/
 	//create shader program
 	GLuint uiProgramFlat = CreateProgram("VertexShader.glsl", "FlatFragmentShader.glsl");
+	GLuint uiProgramTextured = CreateProgram("VertexShader.glsl", "TexturedFragmentShader.glsl");
 
 	//find the position of the matrix variable in the shader so we can send info there later
 	GLuint MatrixIDFlat = glGetUniformLocation(uiProgramFlat, "MVP");
+	GLuint MatrixIDTextured = glGetUniformLocation(uiProgramTextured, "MVP");
 
 	//set up the mapping of the screen to pixel co-ordinates. 
 	float* orthographicProjection = getOrtho(0, 1024, 0, 720, 0, 100);
@@ -80,25 +67,28 @@ int main()
 		//enable Shaders
 		glUseProgram(uiProgramFlat);
 
+
 		//send our orthographic projection info to the shader
 		glUniformMatrix4fv(MatrixIDFlat, 1, GL_FALSE, orthographicProjection);
 
 		//enable vertex array state
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
+		//glEnableVertexAttribArray(0);
+		//glEnableVertexAttribArray(1);
+		//glEnableVertexAttribArray(2);
 
 		//specify where our vertex array is
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(float)* 4));
+		//glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+		//glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(float)* 4));
 
 		playerInstance.UpdateVBO_IBO();
 		playerInstance.UpdateDraw();
 
-		background.UpdateVBO_IBO();
-		background.UpdateDraw();
+		//background.UpdateVBO_IBO();
+		//background.UpdateDraw();
+		glUseProgram(uiProgramTextured);
 
 		Astroids.UpdateVBO_IBO();
-		Astroids.UpdateDraw();
+		Astroids.UpdateDraw(MatrixIDTextured, uiProgramTextured);
 
 
 		//swap front and back buffers

@@ -3,20 +3,22 @@
 
 #include "BaseClass.h"
 
-class Astroids
+class Astroids:
+	public BaseClass
 {
 public:
 	Astroids();
 	~Astroids(){};
 
-
+	int height, width, bpp;
 	void Initialize();
 	void UpdateVBO_IBO();
-	void UpdateDraw();
-	void DestroyPlayer();
+	void UpdateDraw(GLuint uniformLocation, GLuint shaderProgram);
+	void DestroyAstroids();
 
 	GLuint uiVBO;
 	GLuint uiIBO;
+	GLuint uiTextureID;
 };
 
 #endif

@@ -10,6 +10,7 @@ public:
 	~Player(){};
 	
 
+
 	void Initialize();
 	void UpdateVBO_IBO();
 	void UpdateDraw();

@@ -51,7 +51,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(Projectdir)libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;MathLib_Static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32.lib;MathLib_Static.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,11 +79,14 @@
   <ItemGroup>
     <ClInclude Include="include\Astroids.h" />
     <ClInclude Include="include\BaseClass.h" />
+    <ClInclude Include="include\glm\glm.hpp" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\SOIL.h" />
     <ClInclude Include="include\Stars.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Astroids.cpp" />
+    <ClCompile Include="source\BaseClass.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Stars.cpp" />
